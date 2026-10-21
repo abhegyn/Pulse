@@ -37,22 +37,12 @@ var checkCmd = &cobra.Command{
 	Short: "Checks the status of the http request provided",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// client := http.Client{
-		// 	Timeout: 5 * time.Second,
-		// }
-		// instead of calling using the Get directly
-		// we use Get from Client as it helps us setup timeout
 		var wg sync.WaitGroup
 
 		for _, site := range args {
 
 			wg.Add(1)
 			go checkUrl(site, &wg)
-			// if err != nil {
-			// 	fmt.Println("Request failed: ", err)
-			// 	return
-			// }
-			// defer resp.Body.Close()
 
 		}
 

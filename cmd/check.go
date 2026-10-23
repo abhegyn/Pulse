@@ -12,12 +12,12 @@ import (
 func checkUrl(x string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	start := time.Now()
+
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
 	resp, err := client.Get(x)
-
-	start := time.Now()
 
 	if err != nil {
 		fmt.Println("Request failed: ", err)
@@ -39,14 +39,27 @@ var checkCmd = &cobra.Command{
 
 		var wg sync.WaitGroup
 
+		limit := 5
+		sem := make(chan struct{}, limit)
+
 		for _, site := range args {
 
+			sem <- struct{}{}
 			wg.Add(1)
-			go checkUrl(site, &wg)
+
+			go func(url string) {
+
+				defer func() {
+					<-sem
+				}()
+
+				checkUrl(url, &wg)
+
+			}(site)
 
 		}
 
-		wg.Wait()
+		wg.Wait() // tells the main to wait for routines to finish
 	},
 }
 

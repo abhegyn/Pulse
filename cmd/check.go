@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func checkUrl(x string, wg *sync.WaitGroup) {
+func checkUrl(x string, wg *sync.WaitGroup) bool {
 	defer wg.Done()
 
 	start := time.Now()
@@ -21,13 +21,21 @@ func checkUrl(x string, wg *sync.WaitGroup) {
 
 	if err != nil {
 		fmt.Println("Request failed: ", err)
-		return
+		return false
 	}
+	statusC := resp.StatusCode
 	defer resp.Body.Close()
 
 	elapsed := time.Since(start)
 	fmt.Println("for:", x)
 	fmt.Println("status:", resp.Status, "status code: ", resp.StatusCode, "time taken: ", elapsed)
+
+	if (statusC >= 200) && (statusC < 300) {
+		return true
+	} else {
+		return false
+	}
+
 }
 
 // checkCmd represents the check command

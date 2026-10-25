@@ -9,8 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func checkUrl(x string, wg *sync.WaitGroup) bool {
-	defer wg.Done()
+func checkUrl(x string) bool {
 
 	start := time.Now()
 
@@ -28,7 +27,7 @@ func checkUrl(x string, wg *sync.WaitGroup) bool {
 
 	elapsed := time.Since(start)
 	fmt.Println("for:", x)
-	fmt.Println("status:", resp.Status, "status code: ", resp.StatusCode, "time taken: ", elapsed)
+	fmt.Println("status:", resp.Status, ", status code: ", resp.StatusCode, ", time taken: ", elapsed)
 
 	if (statusC >= 200) && (statusC < 300) {
 		return true
@@ -61,7 +60,8 @@ var checkCmd = &cobra.Command{
 					<-sem
 				}()
 
-				checkUrl(url, &wg)
+				checkUrl(url)
+				defer wg.Done()
 
 			}(site)
 

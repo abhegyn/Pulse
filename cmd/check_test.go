@@ -3,21 +3,13 @@ package cmd
 import (
 	"net/http"
 	"net/http/httptest"
-	"sync"
 	"testing"
 )
-
-// func isSuccess(status int) bool {
-// 	if (status <= 299) && (status >= 200) {
-// 		return true
-// 	} else {
-// 		return false
-// 	}
-// }
 
 func TestCheckUrl(t *testing.T) {
 	// a local html server that is used to test the check.go's working
 	// we can't rely on external servers for testing
+	// multiple servers are booted up and closed this is due to the need to check multiple status codes
 
 	tests := []struct {
 		status int
@@ -28,8 +20,6 @@ func TestCheckUrl(t *testing.T) {
 		{500, false},
 	}
 
-	var wg sync.WaitGroup
-
 	for _, tt := range tests {
 		server := httptest.NewServer(
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -37,8 +27,8 @@ func TestCheckUrl(t *testing.T) {
 			}),
 		)
 		defer server.Close()
-		wg.Add(1)
-		got := checkUrl(server.URL, &wg)
+
+		got := checkUrl(server.URL)
 
 		if got != tt.want {
 			t.Errorf(

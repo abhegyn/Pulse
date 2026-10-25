@@ -21,9 +21,10 @@ func TestCheckUrl(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		newStat := tt.status
 		server := httptest.NewServer(
 			http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				w.WriteHeader(tt.status)
+				w.WriteHeader(newStat)
 			}),
 		)
 		defer server.Close()

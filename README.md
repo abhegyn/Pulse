@@ -4,8 +4,6 @@
 
 Pulse is a command-line tool that checks multiple URLs concurrently and reports their HTTP status codes and response times. It uses Go goroutines, a semaphore-based concurrency limit, HTTP timeouts, and [Cobra](https://github.com/spf13/cobra) for command-line interface management.
 
-- The tests are under-contruction
-
 ## Features
 
 - **Concurrent URL checks** — check multiple URLs without waiting for each request to finish sequentially.
@@ -94,17 +92,6 @@ go run . check https://example.com https://go.dev https://github.com
 
 Pulse checks the supplied URLs concurrently and prints each URL's HTTP status and response time.
 
-### Get help
-
-```bash
-go run . --help
-```
-
-For command-specific help:
-
-```bash
-go run . check --help
-```
 
 ## Example output
 
@@ -112,10 +99,10 @@ The exact output and response times will vary depending on network conditions an
 
 ```text
 for: https://example.com
-status: 200 OK status code: 200 time taken: 150ms
+status: 200 OK, status code: 200, time taken: 150ms
 
 for: https://go.dev
-status: 200 OK status code: 200 time taken: 230ms
+status: 200 OK, status code: 200, time taken: 230ms
 ```
 
 ## How it works
@@ -130,12 +117,6 @@ Pulse uses several Go concepts to perform its checks efficiently:
 - **Cobra** — provides the command and argument structure for the CLI.
 
 ## Development
-
-Format the code:
-
-```bash
-go fmt ./...
-```
 
 Run the tests:
 
